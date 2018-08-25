@@ -1,19 +1,31 @@
 {% extends 'base.html' %}
 {% block content %}
 
+
+<!--Icon & Title-->
+
 <div class="row">
     <div class="col-2">
-        <img src="{{ product.icon.url }}" class="img-fluid" />
-    </div>
+        <img src="{{ product.icon.url }}" class="img-fluid rounded-circle" />
+    </div>    
     <div class="col-10">
         <a href="{{ product.url }}"><h1>{{ product.title }}</h1></a>
     </div>
+</div>
 
-    <div class="col-8">
-            <img src="{{ product.image.url }}" class="img-fluid" />
-        </div>
+<br/>
+
+<!--Product Content-->
+
+<div class="row">
+    <div class="col-8" style="background-color:lightgray">
+            <img src="{{ product.image.url }}" class="img-fluid rounded" />
+    </div>
+
+    <!--Upvote Button-->
+
     <div class="col-4">
-        <a href="">
+        <a href="javascript:{document.getElementById('upvote').submit()}">
             <button class="btn btn-primary btn-lg btn-block">
                 <ion-icon name="arrow-dropup"></ion-icon>
                 Upvote {{ product.votes_total }}                        
@@ -22,7 +34,38 @@
     </div>
 </div>
 
-{{ product.title }}
+<!--User Info-->
 
+<div class="row pt-1">
+    <div class="col-4">
+        <h4>
+            <ion-icon name="person"></ion-icon>
+            Hunted by {{ product.hunter.username }}
+        </h4>
+    </div>
+
+    <div class="col-4 text-right">
+           
+        <h4>
+            <ion-icon name="calendar"></ion-icon> 
+            {{ product.pub_date_pretty }}
+        </h4>
+    </div>
+</div>
+
+<!--Body Content-->
+
+<div class="row"> 
+    <div class="col-8">
+        <p>{{ product.body }}</p>
+    </div>
+</div>
+
+<!--Hidden form for upvote functionality-->
+
+<form id="upvote" method="POST" action="{% url 'upvote' product.id %}">
+    {% csrf_token %}  
+    <input type="hidden">
+</form>
 
 {% endblock %}

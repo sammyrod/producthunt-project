@@ -5,9 +5,13 @@ from django.utils import timezone
 
 
 def home(request):
-    return render(request, 'products/home.html')
 
-@login_required
+    products = Product.objects
+    pass_project_dict = {'products': products}
+
+    return render(request, 'products/home.html', pass_project_dict)
+
+@login_required(login_url="/accounts/signup")
 def create(request):
     if request.method == 'POST':
         if request.POST['title'] and request.POST['body'] \
@@ -46,3 +50,17 @@ def detail(request, product_id):
     product_dict = {'product': product}
 
     return render(request, 'products/detail.html', product_dict)
+
+@login_required(login_url="/accounts/signup")
+def upvote(request, product_id):
+
+    if request.method == 'POST':
+        product = get_object_or_404(Product, pk=product_id)
+        product.votes_total += 1
+        product.save()
+        return redirect('/products/' + str(product.id))
+    else:
+        product = get_object_or_404(Product, pk=product_id)
+        product.votes_total += 1
+        product.save()
+        return redirect('home')
